@@ -74,7 +74,7 @@ text-align: center;
 
 `
 const ButtonDiv = styled.div`
-margin-top: 8vh;
+margin-top: 3vh;
 
 `
 const StyledModal = styled(Modal)`
@@ -91,7 +91,6 @@ color: #1f1f1f;
   width: 90%;
   height: 60vh;
   font-family: sans-serif;
-  z-index: 999;
 
 
   button {

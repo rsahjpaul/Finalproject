@@ -44,14 +44,13 @@ const DisplayProject = () => {
     <ProjectContainer>
       <ProjectHeader>
         <ProjectTitle>{projects.project?.title}</ProjectTitle>
-        <ProjectAuthor>By: Author</ProjectAuthor>
+        <ProjectAuthor>By: WritersBlockUser</ProjectAuthor>
       </ProjectHeader>
       <ProjectContent>
         <ProjectDescription
           dangerouslySetInnerHTML={{ __html: projects.project?.description }}
         />
       </ProjectContent>
-      <CommentSection projectId={projectId} />
     </ProjectContainer>
   );
 };

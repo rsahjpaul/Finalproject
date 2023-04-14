@@ -5,7 +5,15 @@ const express = require("express");
 const morgan = require("morgan");
 const helmet = require("helmet");
 
-const { postFinishedProject, getProjects, getProjectById, postNewProject, getNewProjects, updateProjectbyId } = require("./handlers");
+const {
+  postFinishedProject,
+  getProjects,
+  getProjectById,
+  postNewProject,
+  getNewProjects,
+  updateProjectbyId,
+  deleteProjectbyId,
+} = require("./handlers");
 
 const port = 8888;
 
@@ -29,7 +37,6 @@ express()
   .get("/getProjects", getProjects)
   .get("/getNewProject", getNewProjects)
 
-
   //get project based on Id
 
   .get("/getProject/:projectId", getProjectById)
@@ -40,8 +47,10 @@ express()
 
   //edit project
   .patch("/updateProject/:projectId", updateProjectbyId)
-  
 
+  //delete project
+
+  .delete("/deleteProject/:projectId", deleteProjectbyId)
 
   // add new endpoints here ☝️
   // ---------------------------------

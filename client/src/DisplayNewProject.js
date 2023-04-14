@@ -7,28 +7,42 @@ import styled, { createGlobalStyle } from "styled-components";
 import { Icon } from "react-icons-kit";
 import { spinner } from "react-icons-kit/icomoon/spinner";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
+import { FiHeart, FiMessageSquare, FiShare } from "react-icons/fi";
+import { FaThumbsUp } from "react-icons/fa";
+import { AiFillEdit } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 const DisplayNewProject = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [projects, setProjects] = useState({});
+  const [liked, setLiked] = useState(false);
+  const [color, setColor] = useState("white");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  let navigate = useNavigate();
 
   const { projectId } = useParams();
 
-  console.log(projectId);
-
   useEffect(() => {
-    // Fetch all projects from the server
     fetch(`/getProject/${projectId}`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
         setProjects(data);
         setIsLoading(false);
+        setTitle(data.project?.title);
+        setDescription(data.project?.description);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, [projectId]);
+  }, [projectId, setTitle, setDescription]);
+
+  useEffect(() => {
+    console.log(title);
+    console.log(description);
+  }, [title, description]);
 
   if (isLoading === true) {
     return (
@@ -38,24 +52,83 @@ const DisplayNewProject = () => {
     );
   }
 
-  //console.log(projects.project?.title);
+  const handleLike = () => {
+    setLiked(!liked);
+    console.log(liked);
+  };
+
+  const handleFinalize = (e) => {
+    e.preventDefault();
+
+    const project = { title, description };
+    console.log(project);
+
+    fetch("/addFinishedProject", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(project),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+
+        // delete project from current collection
+        fetch(`/deleteProject/${projectId}`, {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            navigate(`/`);
+          })
+          .catch((error) => {
+            console.error(error);
+            window.alert(error);
+          });
+      })
+      .catch((error) => {
+        console.error(error);
+        window.alert(error);
+      });
+  };
 
   return (
     <ProjectContainer>
       <ButtonWrapper>
         <Link to={`/editProject/${projects.project?.id}`}>
-          <StyledIcon></StyledIcon>
+          <StyledIcon />
         </Link>
       </ButtonWrapper>
       <ProjectHeader>
         <ProjectTitle>{projects.project?.title}</ProjectTitle>
-        <ProjectAuthor>By: Author</ProjectAuthor>
+        <ProjectAuthor>By: WritersBlockUser</ProjectAuthor>
       </ProjectHeader>
       <ProjectContent>
         <ProjectDescription
           dangerouslySetInnerHTML={{ __html: projects.project?.description }}
         />
       </ProjectContent>
+
+      <LowerContainer>
+        <StyledButton
+          onClick={handleLike}
+          style={{ color: liked ? "purple" : "white" }}
+        >
+          <StyledLike />
+        </StyledButton>
+
+        <StyledFinalizeButton onClick={handleFinalize}>
+          <p>Finalize</p>
+        </StyledFinalizeButton>
+      </LowerContainer>
+
       <CommentSection projectId={projectId} />
     </ProjectContainer>
   );
@@ -63,9 +136,40 @@ const DisplayNewProject = () => {
 
 export default DisplayNewProject;
 
-const StyledIcon = styled(AiOutlineQuestionCircle)`
+const StyledFinalizeButton = styled.button`
   color: white;
-  font-size: 4vh;
+  background: transparent;
+  border-style: none;
+  &:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+  }
+`;
+
+const StyledButton = styled.button`
+  background: transparent;
+  border-style: none;
+`;
+
+const LowerContainer = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 10vh;
+  width: 50vh;
+`;
+
+const StyledLike = styled(FaThumbsUp)`
+  &:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+  }
+`;
+
+const StyledIcon = styled(AiFillEdit)`
+  color: white;
+  font-size: 2vh;
+  margin-right: 2vh;
+  margin-top: 1vh;
 
   &:hover {
     transform: scale(1.2);

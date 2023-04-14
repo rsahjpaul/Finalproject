@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 const Profile = () => {
-  // Here you can add state hooks and fetch user data from your database
+  const [userData, setUserData] = useState({
+    name: '',
+    email: '',
+    bio: '',
+  });
+
+  useEffect(() => {
+    fetch('/api/user')
+      .then(response => response.json())
+      .then(data => setUserData(data))
+      .catch(error => console.error(error));
+  }, []);
 
   return (
     <Container>

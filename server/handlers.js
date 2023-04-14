@@ -128,6 +128,7 @@ const getProjectById = async (req, res) => {
 };
 
 const updateProjectbyId = async (req, res) => {
+
   try {
     await client.connect();
     const db = client.db("WritersBlock");
@@ -166,6 +167,42 @@ const updateProjectbyId = async (req, res) => {
   }
 };
 
+const deleteProjectbyId = async (req, res) => {
+
+  try {
+    await client.connect();
+    const db = client.db("WritersBlock");
+
+    const projectId = req.params.projectId;
+
+    const recentlyAddedProjects = await db
+    .collection("recentlyaddedprojects")
+    .findOne({ id: projectId });
+
+    const featuredProject = await db
+      .collection("featuredprojects")
+      .findOne({ id: projectId });
+
+      //delete project
+
+      
+    const projectDelete = await db
+    .collection("recentlyaddedprojects")
+    .deleteOne({ id: projectId });
+
+
+ 
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching project" });
+  } finally {
+    await client.close();
+  }
+
+
+
+}
+ 
 
 
 module.exports = {
@@ -174,5 +211,6 @@ module.exports = {
   getProjectById,
   postNewProject,
   getNewProjects,
-  updateProjectbyId
+  updateProjectbyId,
+  deleteProjectbyId
 };
