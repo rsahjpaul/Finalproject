@@ -12,52 +12,42 @@ const client = new MongoClient(MONGO_URI, options);
 
 const postFinishedProject = async (req, res) => {
   try {
-    // Extract the project data from the request body
     const { title, description } = req.body;
 
     const projectId = uuidv4();
 
-    // Insert a new project document into the database
     await client.connect();
     const db = client.db("WritersBlock");
     const result = await db
       .collection("featuredprojects")
       .insertOne({ id: projectId, title, description });
 
-    // Return a success response
     res.status(200).json({ message: "Project created successfully" });
   } catch (error) {
-    // Return an error response if there was a problem saving the project
     console.error(error);
     res.status(500).json({ message: "Error creating project" });
   } finally {
-    // Close the database connection when the function completes
     await client.close();
   }
 };
 
 const postNewProject = async (req, res) => {
   try {
-    // Extract the project data from the request body
     const { title, description } = req.body;
 
     const projectId = uuidv4();
 
-    // Insert a new project document into the database
     await client.connect();
     const db = client.db("WritersBlock");
     const result = await db
       .collection("recentlyaddedprojects")
       .insertOne({ id: projectId, title, description });
 
-    // Return a success response
     res.status(200).json({ message: "Project created successfully" });
   } catch (error) {
-    // Return an error response if there was a problem saving the project
     console.error(error);
     res.status(500).json({ message: "Error creating project" });
   } finally {
-    // Close the database connection when the function completes
     await client.close();
   }
 };
@@ -140,19 +130,16 @@ const updateProjectbyId = async (req, res) => {
     const updatedProject = req.body;
     console.log(updatedProject)
 
-    // Update the project in the featuredprojects collection
     let result = await db
       .collection("featuredprojects")
       .updateOne({ id: projectId }, { $set: updatedProject });
 
     if (result.modifiedCount === 0) {
-      // If project not found in the featuredprojects collection, update it in the recentlyaddedprojects collection
       result = await db
         .collection("recentlyaddedprojects")
         .updateOne({ id: projectId }, { $set: updatedProject });
 
       if (result.modifiedCount === 0) {
-        // If project not found in either collection, return 404
         res.status(404).json({ message: "Project not found" });
         return;
       }
