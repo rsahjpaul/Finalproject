@@ -6,6 +6,7 @@ const options = {
   useUnifiedTopology: true,
 };
 
+// rezasahjpaul:Fuckingpassword1995@cluster0.shg0bqv.mongodb.net/
 const { v4: uuidv4 } = require("uuid");
 
 const client = new MongoClient(MONGO_URI, options);

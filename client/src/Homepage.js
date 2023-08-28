@@ -24,6 +24,7 @@ const HomePage = () => {
 
   return (
     <HomepageContainer>
+
       <Title>Welcome to WritersBlock!</Title>
       <InfoBar>
       <StyledButton onClick={openModal}>New to WritersBlock? 
@@ -62,6 +63,7 @@ const HomePage = () => {
         <button onClick={closeModal}>Return</button>
         </ButtonDiv>
       </StyledModal>
+
       
     </HomepageContainer>
   );
